@@ -25,6 +25,7 @@ object QuicksortAkka extends App {
       case Sort(list) => list match {
         case l if l.length <= 1 =>
           sender() ! Result(l)
+          context.stop(self)
         case l => {
           val leftSorter = context.actorOf(Props[QuickSorter],"left")
           val rightSorter = context.actorOf(Props[QuickSorter],"right")
