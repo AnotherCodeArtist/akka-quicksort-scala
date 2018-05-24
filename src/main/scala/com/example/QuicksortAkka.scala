@@ -11,9 +11,7 @@ import com.typesafe.config.{Config, ConfigFactory}
 object QuicksortAkka extends App {
 
   trait SortMessage
-
   case class Sort(list: List[Int]) extends SortMessage
-
   case class Result(sorted: List[Int]) extends SortMessage
 
   class QuickSorter extends Actor with ActorLogging {
