@@ -3,7 +3,10 @@ package com.example
 import akka.actor.Actor.Receive
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
 import akka.event.LoggingReceive
+import com.example.ActorHierarchyExperiments.system
 import com.typesafe.config.{Config, ConfigFactory}
+
+import scala.io.StdIn
 
 /**
   * Created by salho on 20.05.18.
@@ -81,6 +84,8 @@ object QuicksortAkka extends App {
   val system: ActorSystem = ActorSystem("quicksortAkka")
   val sorter = system.actorOf(Props[QuickSortRunner],"runner")
   sorter ! Sort(List(4, 2, 8, 7, 21, 1, 1, 0))
-
+  println(">>> Press ENTER to exit <<<")
+  try StdIn.readLine()
+  finally system.terminate()
 
 }
