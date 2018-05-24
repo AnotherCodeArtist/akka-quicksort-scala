@@ -1,7 +1,7 @@
 package com.example.iot
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props, Terminated}
-import com.example.iot.DeviceGroup.{ReplyDeviceList, RequestDeviceList}
+import com.example.iot.DeviceGroup.{ReplyDeviceList, RequestAllTemperatures, RequestDeviceList}
 import com.example.iot.DeviceManager.RequestTrackDevice
 
 object DeviceGroup {
@@ -46,6 +46,15 @@ class DeviceGroup(groupId: String) extends Actor with ActorLogging {
 
     case RequestDeviceList(requestId) ⇒
       sender() ! ReplyDeviceList(requestId, deviceIdToActor.keySet)
+
+    case RequestAllTemperatures(requestId) ⇒
+      import scala.concurrent.duration._
+      context.actorOf(DeviceGroupQuery.props(
+        actorToDeviceId = deviceIdToActor.map(_.swap),
+        requestId = requestId,
+        requester = sender(),
+        3.seconds
+      ))
 
     case Terminated(deviceActor) ⇒
       log.info("Device actor {} has been terminated", deviceActor)
